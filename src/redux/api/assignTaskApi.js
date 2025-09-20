@@ -1,27 +1,32 @@
 import supabase from "../../SupabaseClient";
 
-export const fetchUniqueDepartmentDataApi = async () =>{
-    try {
-       const { data, error } = await supabase
-  .from('users')
-  .select('department','given_by','user_name')
-  .order('department', { ascending: true });
-  
+export const fetchUniqueDepartmentDataApi = async () => {
+  try {
+    const { data, error } = await supabase
+      .from("users")
+      .select("department,given_by,user_name")
+      .order("department", { ascending: true });
 
-const uniqueDepartments = [...new Set(data.map(d => d.department))];
-
-        if (!error) {
-            console.log("fetch succefully",uniqueDepartments)
-            
-        } else {
-           console.log("error when fetching data",error) 
-        } 
-        return uniqueDepartments;
-    } catch (error) {
-       console.log("error from supabase",error);
-        
+    if (error) {
+      console.log("Error fetching data", error);
+      return [];
     }
-}
+
+    // Filter out null/empty departments and get unique values
+    const uniqueDepartments = [
+      ...new Set(data.filter(d => d && d.department).map(d => d.department))
+    ];
+
+    console.log("Fetched successfully:", uniqueDepartments);
+
+    return uniqueDepartments;
+
+  } catch (error) {
+    console.log("Error from Supabase:", error);
+    return [];
+  }
+};
+
 
 export const fetchUniqueGivenByDataApi = async () =>{
     try {
