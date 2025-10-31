@@ -3,9 +3,12 @@ import supabase from "../../SupabaseClient";
 export const fetchUniqueDepartmentDataApi = async () => {
   try {
     const { data, error } = await supabase
-      .from("users")
-      .select("department,given_by,user_name")
-      .order("department", { ascending: true });
+  .from("users")
+  .select("department, given_by, user_name")
+  .not("department", "is", null)        // exclude NULL
+  .neq("department", "")                // exclude empty string
+  .order("department", { ascending: true });
+
 
     if (error) {
       console.log("Error fetching data", error);
