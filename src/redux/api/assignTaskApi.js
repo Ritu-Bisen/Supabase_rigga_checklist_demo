@@ -4,7 +4,7 @@ export const fetchUniqueDepartmentDataApi = async () => {
   try {
     const { data, error } = await supabase
   .from("users")
-  .select("department, given_by, user_name")
+  .select("department")
   .not("department", "is", null)        // exclude NULL
   .neq("department", "")                // exclude empty string
   .order("department", { ascending: true });
